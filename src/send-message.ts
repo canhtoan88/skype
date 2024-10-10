@@ -1,27 +1,7 @@
-const generateClientMessageId =  require('./generate-message-id');
+import generateClientMessageId from "./generate-message-id";
 
-const chatIds = {
-  HEHE: '19:f2cfe37eaf04437b84964c62f0b0993a@thread.skype',
-  DANH: '8:live:.cid.de940f6db716504b',
-}
-
-const sendMessage = async (message) => {
-  // const auth = await fetch('https://login.skype.com/login', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/x-www-form-urlencoded'
-  //   },
-  //   body: JSON.stringify({
-  //     username: '',
-  //     password: '',
-  //   }),
-  // });
-
-  // const data = await auth.text();
-
-  // console.log('data :>> ', data);
-
-  const url = `https://msgapi.teams.live.com/v1/users/ME/conversations/${chatIds.DANH}/messages?x-ecs-etag="22E0RRwy0/U1lLZ5dRNCboAzGhlSTNixBrTPFTyxwrc="`
+const sendMessage = async (content: string, conversationId: string) => {
+  const url = `https://msgapi.teams.live.com/v1/users/ME/conversations/${conversationId}/messages?x-ecs-etag="22E0RRwy0/U1lLZ5dRNCboAzGhlSTNixBrTPFTyxwrc="`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -34,7 +14,7 @@ const sendMessage = async (message) => {
     body: JSON.stringify({
       clientmessageid: generateClientMessageId(),
       composetime: new Date().toISOString(),
-      content: message,
+      content,
       messagetype: "RichText",
       contenttype: "text",
       imdisplayname: "Removed Account",
@@ -44,6 +24,7 @@ const sendMessage = async (message) => {
   const data = await response.json();
 
   console.log('data :>> ', data);
+  // data :>>  { OriginalArrivalTime: 1728544718322 }
 }
 
-module.exports = sendMessage;
+export default sendMessage;
